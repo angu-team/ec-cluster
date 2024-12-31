@@ -1,0 +1,118 @@
+services:
+  ec-master:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.1
+    container_name: ec-master
+    environment:
+      - cluster.name=cluster-elastic
+      - node.name=ec-master
+      - node.roles=master
+      - network.publish_host=ec-master
+      - discovery.seed_hosts=ec-node1,ec-node2,ec-node3,ec-node4
+      - cluster.initial_master_nodes=ec-master
+      - xpack.security.enabled=false
+    networks:
+      - elastic-net
+    ports:
+      - 9200:9200
+      - 9300:9300
+    volumes:
+      - es-master-data:/usr/share/elasticsearch/data
+    deploy:
+      resources:
+        limits:
+          memory: 5g
+
+  ec-node1:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.1
+    container_name: ec-node1
+    environment:
+      - cluster.name=cluster-elastic
+      - node.name=ec-node1
+      - node.roles=data,ingest
+      - network.publish_host=ec-node1
+      - discovery.seed_hosts=ec-master,ec-node2,ec-node3,ec-node4
+      - xpack.security.enabled=false
+    networks:
+      - elastic-net
+    ports:
+      - 9201:9200
+    volumes:
+      - es-node1-data:/usr/share/elasticsearch/data
+    deploy:
+      resources:
+        limits:
+          memory: 5g
+
+  ec-node2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.1
+    container_name: ec-node2
+    environment:
+      - cluster.name=cluster-elastic
+      - node.name=ec-node2
+      - node.roles=data,ingest
+      - network.publish_host=ec-node2
+      - discovery.seed_hosts=ec-master,ec-node1,ec-node3,ec-node4
+      - xpack.security.enabled=false
+    networks:
+      - elastic-net
+    ports:
+      - 9202:9200
+    volumes:
+      - es-node2-data:/usr/share/elasticsearch/data
+    deploy:
+      resources:
+        limits:
+          memory: 5g
+
+  ec-node3:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.1
+    container_name: ec-node3
+    environment:
+      - cluster.name=cluster-elastic
+      - node.name=ec-node3
+      - node.roles=data,ingest
+      - network.publish_host=ec-node3
+      - discovery.seed_hosts=ec-master,ec-node1,ec-node2,ec-node4
+      - xpack.security.enabled=false
+    networks:
+      - elastic-net
+    ports:
+      - 9203:9200
+    volumes:
+      - es-node3-data:/usr/share/elasticsearch/data
+    deploy:
+      resources:
+        limits:
+          memory: 5g
+
+  ec-node4:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.1
+    container_name: ec-node4
+    environment:
+      - cluster.name=cluster-elastic
+      - node.name=ec-node4
+      - node.roles=data,ingest
+      - network.publish_host=ec-node4
+      - discovery.seed_hosts=ec-master,ec-node1,ec-node2,ec-node3
+      - xpack.security.enabled=false
+    networks:
+      - elastic-net
+    ports:
+      - 9204:9200
+    volumes:
+      - es-node4-data:/usr/share/elasticsearch/data
+    deploy:
+      resources:
+        limits:
+          memory: 5g
+
+networks:
+  elastic-net:
+    driver: bridge
+
+volumes:
+  es-master-data:
+  es-node1-data:
+  es-node2-data:
+  es-node3-data:
+  es-node4-data:
