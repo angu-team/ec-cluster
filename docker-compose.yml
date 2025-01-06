@@ -112,7 +112,7 @@ services:
     environment:
       - cluster.name=cluster-elastic
       - node.name=ec-coordinator
-      - node.roles=
+      - node.roles=[]
       - network.publish_host=ec-coordinator
       - discovery.seed_hosts=ec-master,ec-node1,ec-node2,ec-node3,ec-node4
       - xpack.security.enabled=false
